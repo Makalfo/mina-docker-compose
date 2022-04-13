@@ -1,0 +1,59 @@
+version: "3.4"
+
+services:
+  mina-mainnet:
+    container_name: mina-mainnet
+    image: ${MINA_IMAGE}
+    restart: always
+    networks:
+      mina-network:
+        ipv4_address: 172.28.10.10
+    environment:
+      - CODA_PRIVKEY_PASS=${WALLET_PASSWORD}
+      - MINA_PRIVKEY_PASS=${WALLET_PASSWORD}
+      - UPTIME_PRIVKEY_PASS=${WALLET_PASSWORD}
+    ports:
+      - "${EXTERNAL_PORT:-8302}:${EXTERNAL_PORT:-8302}"
+      - "${LIB_P2P_PORT:-3085}:${LIB_P2P_PORT:-3085}"
+      - "${LIM_GRAPHQL_PORT:-3095}:${LIM_GRAPHQL_PORT:-3095}"
+    volumes:
+      - $PWD/mina-config/:/root/.mina-config
+      - type: bind
+        source: $PWD/${KEY_FOLDER}/
+        target: /keys/
+        read_only: true
+    command:  daemon \
+              --block-producer-key /keys/my-wallet \
+              --coinbase-receiver ${COINBASE_RECEIVER} \
+              --limited-graphql-port ${LIM_GRAPHQL_PORT:-3095} \
+              --open-limited-graphql-port \
+              --external-port ${EXTERNAL_PORT:-8302} \
+              --insecure-rest-server \
+              --uptime-url ${UPTIME_URL:-http://34.134.227.208/v1/submit} \
+              --uptime-submitter-key /keys/my-wallet \
+              --max-connections ${MAX_CONNECTIONS:-100} \
+              --file-log-level ${FILE_LOG_LEVEL:-Info} \
+              --log-level ${LOG_LEVEL:-Info} \
+              --stop-time ${STOP_TIME:-72} \
+              --peer-list-url ${PEER_LIST:-https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt}
+
+  mina-sidecar:
+    container_name: mina-sidecar
+    image: minaprotocol/mina-bp-stats-sidecar:latest
+    restart: always
+    networks:
+      - mina-network
+    volumes:
+      - type: bind
+        source: $PWD/config/mina-sidecar.json
+        target: /etc/mina-sidecar.json
+        read_only: true
+    depends_on:
+      - mina-mainnet
+
+networks:
+  mina-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.10.0/24
