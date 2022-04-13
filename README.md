@@ -24,7 +24,7 @@ All configuration can be done in the .env file. <br>
    `docker-compose up -d`
    
 # Notes
-1) The docker logs can be viewed by the following:
+1) The docker logs can be viewed by the following: <br>
    `docker logs -f mina-mainnet` <br>
    `docker logs -f mina-sidecar` <br>
 2) Ensure the mina-sidecar is connected to the daemon as that's what reports the uptime. The mina-sidecar will show an error until the mina daemon is in bootstrap, catchup, or synced
