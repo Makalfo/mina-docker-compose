@@ -10,6 +10,7 @@ All configuration can be done in the .env file. <br>
  - `KEY_FOLDER`:         Folder containing the block producer hot key <br>
  - `WALLET_PASSWORD`:    Password for the wallet <br>
  - `COINBASE_RECEIVER`:  Coinbase Receiver for receiving the block production rewards <br>
+ - `UPTIME_URL`:         URL for the integrated Snark Uptime Tracker submission
 
 # Instructions:
 1) Populate the .env
