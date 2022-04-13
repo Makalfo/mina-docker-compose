@@ -19,7 +19,7 @@ All configuration can be done in the .env file. <br>
 4) Ensure the permissions on the key folder and file. <br>
    `chmod 700 <key folder>` <br>
    `chmod 600 <key file>`
-5) Bring up the containers via docker-compose <br>
+5) Bring up the containers via docker-compose in the directory of the docker-compose file <br>
    `docker-compose up -d`
    
 # Notes
@@ -27,3 +27,5 @@ All configuration can be done in the .env file. <br>
    `docker logs -f mina-mainnet` <br>
    `docker logs -f mina-sidecar` <br>
 2) Ensure the mina-sidecar is connected to the daemon as that's what reports the uptime. The mina-sidecar will show an error until the mina daemon is in bootstrap, catchup, or synced
+3) The docker-compose file will bring up both the mina-sidecar and also enable the integrated uptime tracker that may be used in the next delegation cycle.
+4) To bring down the docker containers, perform `docker-compose down`
